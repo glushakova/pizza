@@ -1,20 +1,12 @@
-import React from "react";
-import "./App.css";
-import Button from "./Button";
+import React from 'react';
+import './App.css';
+import Button from './Button';
+import Clear from './Clear';
+import data from './ingredients.json';
 
 class App extends React.Component {
   state = {
-    ingredients: {
-      Сыр: false,
-      Ананасы: false,
-      Ветчина: false,
-      Салями: false,
-      Курица: false,
-      Томаты: false,
-      Огурцы: false,
-      "Острый перец": false,
-      Соус: false,
-    },
+    ingredients: data,
     item: 0,
   };
 
@@ -26,11 +18,19 @@ class App extends React.Component {
   };
 
   sum = (elem) => {
-    if (elem === false) {
-      this.setState({ item: this.state.item + 1 });
-    } else {
-      this.setState({ item: this.state.item - 1 });
-    }
+    this.setState({ item: elem ? this.state.item - 1 : this.state.item + 1 });
+  };
+
+  clear = () => {
+    const update = { ...this.state.ingredients };
+    Object.keys(update).forEach((key) => {
+      update[key] = false;
+    });
+
+    this.setState({
+      item: 0,
+      ingredients: update,
+    });
   };
 
   render() {
@@ -51,12 +51,13 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <h2>Пицца</h2>
+        <div className="clear">
+          <h2>Пицца</h2>
+          <Clear onClick={this.clear} />
+        </div>
         {listItems}
-        <h3 className="choice">Вы выбрали {this.state.item} игрeдиентов.</h3>
-        <h4>
-          {this.state.item >= 5 ? "Можно выбрать до 5 ингрeдиентов!" : ""}
-        </h4>
+        <h3 className="choice">{`Вы выбрали ${this.state.item} игрeдиентов.`}</h3>
+        <h4>{this.state.item >= 5 && 'Можно выбрать до 5 ингрeдиентов!'}</h4>
       </div>
     );
   }

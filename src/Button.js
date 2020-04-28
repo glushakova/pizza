@@ -1,5 +1,5 @@
-import React from "react";
-import "./Button.css";
+import React from 'react';
+import './Button.css';
 
 class Button extends React.Component {
   render() {
@@ -8,11 +8,9 @@ class Button extends React.Component {
         <button
           className="button"
           onClick={this.props.onClick}
-          disabled={
-            this.props.item >= 5 && this.props.choice === false ? true : false
-          }
+          disabled={this.props.item >= 5 && !this.props.choice}
         >
-          {this.props.choice ? "✔" : "✖"}
+          {this.props.choice ? '✔' : '✖'}
         </button>
         <p className="text">{this.props.text}</p>
       </div>
