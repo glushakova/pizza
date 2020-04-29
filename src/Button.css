@@ -1,0 +1,14 @@
+.compotent {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.button {
+  margin-right: 10px;
+}
+
+.text {
+  margin: 0px;
+}
