@@ -7,24 +7,32 @@ import data from './ingredients.json';
 class App extends React.Component {
   state = {
     ingredients: data,
-    item: 0,
   };
 
   choice = (name) => {
     const { ingredients } = this.state;
     this.setState({
-      ingredients: { ...ingredients, [name]: !ingredients[name] },
+      ingredients: { ...ingredients, [name]: 1 },
     });
   };
 
-  sum = (elem) => {
-    this.setState({ item: elem ? this.state.item - 1 : this.state.item + 1 });
+  sum = () => {
+    return Object.values(this.state.ingredients).filter((count) => {
+      return count > 0;
+    }).length;
+  };
+  getAll = () => {
+    return Object.values(this.state.ingredients)
+      .filter((count) => {
+        return count > 0;
+      })
+      .reduce((sum, current) => sum + current, 0);
   };
 
   clear = () => {
     const update = { ...this.state.ingredients };
     Object.keys(update).forEach((key) => {
-      update[key] = false;
+      update[key] = 0;
     });
 
     this.setState({
@@ -33,19 +41,39 @@ class App extends React.Component {
     });
   };
 
-  render() {
-    const { ingredients, item } = this.state;
+  minus = (name, num) => {
+    const { ingredients } = this.state;
 
+    this.setState({
+      ingredients: { ...ingredients, [name]: num - 1 },
+    });
+  };
+
+  plus = (name, num) => {
+    const { ingredients } = this.state;
+
+    this.setState({
+      ingredients: { ...ingredients, [name]: num + 1 },
+    });
+  };
+
+  render() {
+    const { ingredients } = this.state;
     const listItems = Object.keys(ingredients).map((key) => (
       <Button
         key={key}
         text={key}
         choice={ingredients[key]}
-        item={item}
+        minus={() => {
+          this.minus(key, ingredients[key]);
+        }}
+        plus={() => {
+          this.plus(key, ingredients[key]);
+        }}
         onClick={() => {
           this.choice(key);
-          this.sum(ingredients[key]);
         }}
+        disabled={this.sum() >= 5 ? true : false}
       />
     ));
 
@@ -56,8 +84,10 @@ class App extends React.Component {
           <Clear onClick={this.clear} />
         </div>
         {listItems}
-        <h3 className="choice">{`Вы выбрали ${this.state.item} игрeдиентов.`}</h3>
-        <h4>{this.state.item >= 5 && 'Можно выбрать до 5 ингрeдиентов!'}</h4>
+        <h3 className="choice">
+          {`Выбрано игредиентов: ${this.sum()}, общее количество: ${this.getAll()}`}
+        </h3>
+        <h4>{this.sum() >= 5 && 'Можно выбрать до 5 ингрeдиентов!'}</h4>
       </div>
     );
   }
